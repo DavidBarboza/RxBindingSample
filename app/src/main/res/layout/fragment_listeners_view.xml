@@ -1,0 +1,241 @@
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+
+    <ImageView
+        android:id="@+id/imageView_shape"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/shape_square"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/imageView_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_shape"
+        app:layout_constraintEnd_toEndOf="@+id/imageView_shape"
+        app:layout_constraintStart_toStartOf="@+id/imageView_shape"
+        app:layout_constraintTop_toTopOf="@+id/imageView_shape"
+        app:srcCompat="@drawable/ic_android"/>
+
+    <TextView
+        android:id="@+id/text_red"
+        android:layout_width="30dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:ems="10"
+        android:gravity="center"
+        android:text="000"
+        app:layout_constraintBottom_toTopOf="@+id/text_green"
+        app:layout_constraintStart_toEndOf="@+id/imageView_shape"
+        app:layout_constraintTop_toTopOf="@+id/imageView_shape"/>
+
+    <TextView
+        android:id="@+id/text_green"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="000"
+        app:layout_constraintBottom_toTopOf="@+id/text_blue"
+        app:layout_constraintEnd_toEndOf="@+id/text_red"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/text_red"
+        app:layout_constraintTop_toBottomOf="@+id/text_red"/>
+
+    <TextView
+        android:id="@+id/text_blue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="000"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView_shape"
+        app:layout_constraintEnd_toEndOf="@+id/text_green"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/text_green"
+        app:layout_constraintTop_toBottomOf="@+id/text_green"/>
+
+    <SeekBar
+        android:id="@+id/seekBar_red"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginStart="8dp"
+        android:max="255"
+        android:progressTint="#ff0000"
+        android:thumbTint="#ff0000"
+        app:layout_constraintBottom_toBottomOf="@+id/text_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_red"
+        app:layout_constraintTop_toTopOf="@+id/text_red"/>
+
+    <SeekBar
+        android:id="@+id/seekBar_green"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:max="255"
+        android:progressTint="#00ff00"
+        android:thumbTint="#00ff00"
+        app:layout_constraintBottom_toBottomOf="@+id/text_green"
+        app:layout_constraintEnd_toEndOf="@+id/seekBar_red"
+        app:layout_constraintStart_toStartOf="@+id/seekBar_red"
+        app:layout_constraintTop_toTopOf="@+id/text_green"/>
+
+    <SeekBar
+        android:id="@+id/seekBar_blue"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp"
+        android:progressTint="#0000ff"
+        android:thumbTint="#0000ff"
+        app:layout_constraintBottom_toBottomOf="@+id/text_blue"
+        app:layout_constraintEnd_toEndOf="@+id/seekBar_green"
+        app:layout_constraintStart_toStartOf="@+id/seekBar_green"
+        app:layout_constraintTop_toTopOf="@+id/text_blue"/>
+
+    <TextView
+        android:id="@+id/moreProperties"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/more_properties"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imageView_shape"
+        app:layout_constraintTop_toBottomOf="@+id/imageView_shape"/>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/moreProperties"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/moreProperties"
+        app:layout_constraintTop_toBottomOf="@+id/moreProperties">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Shape"
+                android:textSize="16sp"/>
+
+            <RadioGroup
+                android:id="@+id/radioGrp_shape"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radioBtn_square"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Square"/>
+
+                <RadioButton
+                    android:id="@+id/radioBtn_circle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Circle"/>
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:text="Icon"
+                android:textSize="16sp"/>
+
+            <CheckBox
+                android:id="@+id/check_withIcon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="With Icon"/>
+
+            <RadioGroup
+                android:id="@+id/radioGrp_icon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/radioBtn_android"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_android"
+                    android:drawableTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/radioBtn_bubble"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_bubble"
+                    android:drawableTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/radioBtn_cloud"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_cloud"
+                    android:drawableTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/radioBtn_heart"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_heart"
+                    android:drawableTint="@android:color/black"/>
+
+                <RadioButton
+                    android:id="@+id/radioBtn_star"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_star"
+                    android:drawableTint="@android:color/black"/>
+            </RadioGroup>
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

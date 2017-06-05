@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">RxBinding</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="shape_rectangle">Square</string>
+    <string name="shape_circular">Circle</string>
+    <string name="shape_with_border">With border</string>
+    <string name="shape_with_icon">With Icon</string>
+    <string name="more_properties">More Settings</string>
+
+</resources>
