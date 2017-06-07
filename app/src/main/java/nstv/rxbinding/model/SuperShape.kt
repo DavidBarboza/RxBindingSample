@@ -7,6 +7,7 @@ import nstv.rxbinding.R
  * Created by Nicole Terc on 6/2/17.
  */
 data class SuperShape(
+        var name: String? = null,
         var shape: Int = R.drawable.shape_square,
         var red: Int = 0,
         var green: Int = 0,
