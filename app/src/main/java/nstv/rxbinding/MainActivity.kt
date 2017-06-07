@@ -27,6 +27,6 @@ class MainActivity : AppCompatActivity() {
         if (USE_RX_BINDING) {
             return RxBindingFragment.getInstance(SuperShape(blue = 200))
         }
-        return NormalWayFragment.getInstance()
+        return NormalWayFragment.getInstance(SuperShape(blue = 200))
     }
 }

@@ -16,7 +16,6 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
 import com.jakewharton.rxbinding2.widget.RxRadioGroup;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
@@ -24,12 +23,9 @@ import com.jakewharton.rxbinding2.widget.RxSeekBar;
 import nstv.rxbinding.R;
 import nstv.rxbinding.model.SuperShape;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RxBindingFragment extends Fragment {
 
-    private SuperShape superShape;
+    protected SuperShape superShape;
 
     //UI ELEMENTS
     ImageView shapeImageView;
@@ -46,14 +42,6 @@ public class RxBindingFragment extends Fragment {
     ImageView iconImageView;
     CheckBox withLogoCheck;
     RadioGroup iconRadioGroup;
-//    //Border
-//    CheckBox borderCheckBox;
-//    TextView redBorderTextView;
-//    TextView greenBorderTextView;
-//    TextView blueBorderTextView;
-//    SeekBar redBorderSeekBar;
-//    SeekBar greenBorderSeekBar;
-//    SeekBar blueBorderSeekBar;
 
     ArrayMap<Integer, Integer> iconBtnToResource;
 
@@ -91,7 +79,7 @@ public class RxBindingFragment extends Fragment {
         init();
     }
 
-    private void init() {
+    protected void init() {
         if (superShape == null) {
             superShape = new SuperShape();
         }
@@ -99,7 +87,7 @@ public class RxBindingFragment extends Fragment {
         setUpListeners();
     }
 
-    private void initUIElements() {
+    protected void initUIElements() {
         shapeImageView = (ImageView) getView().findViewById(R.id.imageView_shape);
         //RGB Background
         redTextView = (TextView) getView().findViewById(R.id.text_red);
@@ -129,29 +117,29 @@ public class RxBindingFragment extends Fragment {
         updateBackgroundColor();
     }
 
-    private void setUpListeners() {
+    protected void setUpListeners() {
         //RGB Background
         RxSeekBar.changes(redSeekBar)
-                .filter(integer -> integer != superShape.getRed())
-                .subscribe(integer -> {
-                    superShape.setRed(integer);
+                .filter(progress -> progress != superShape.getRed())
+                .subscribe(progress -> {
+                    superShape.setRed(progress);
                     redTextView.setText(superShape.getRed() + "");
                     updateBackgroundColor();
                 });
 
         RxSeekBar.changes(greenSeekBar)
-                .filter(integer -> integer != superShape.getGreen())
-                .subscribe(integer -> {
-                    superShape.setGreen(integer);
+                .filter(progress -> progress != superShape.getGreen())
+                .subscribe(progress -> {
+                    superShape.setGreen(progress);
                     greenTextView.setText(superShape.getGreen() + "");
                     updateBackgroundColor();
                 });
 
         RxSeekBar.changes(blueSeekBar)
-                .map(integer -> integer * 255 / 100)
-                .filter(integer -> integer != superShape.getBlue())
-                .subscribe(integer -> {
-                    superShape.setBlue(integer);
+                .map(progress -> progress * 255 / 100)
+                .filter(progress -> progress != superShape.getBlue())
+                .subscribe(progress -> {
+                    superShape.setBlue(progress);
                     blueTextView.setText(superShape.getBlue() + "");
                     updateBackgroundColor();
                 });
@@ -185,7 +173,7 @@ public class RxBindingFragment extends Fragment {
     }
 
     //UI operations
-    private void updateBackgroundColor() {
+    protected void updateBackgroundColor() {
         if (shapeImageView == null) {
             return;
         }
@@ -193,17 +181,17 @@ public class RxBindingFragment extends Fragment {
         updateIconTint();
     }
 
-    private void updateIconTint() {
+    protected void updateIconTint() {
         iconImageView.setColorFilter(getContrastColor(superShape.getRed(), superShape.getGreen(), superShape.getBlue()));
     }
 
-    private void showHideIcon() {
+    protected void showHideIcon() {
         iconRadioGroup.setVisibility(superShape.getWithIcon() ? View.VISIBLE : View.INVISIBLE);
         iconImageView.setVisibility(superShape.getWithIcon() ? View.VISIBLE : View.INVISIBLE);
 
     }
 
-    private void updateIcon() {
+    protected void updateIcon() {
         iconImageView.setImageDrawable(getActivity().getDrawable(superShape.getIconDrawable()));
     }
 
