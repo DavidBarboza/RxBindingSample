@@ -1,6 +1,7 @@
 package nstv.rxbinding.listenersFragment;
 
 
+import android.content.Context;
 import android.widget.CompoundButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -14,9 +15,9 @@ public class NormalWayFragment extends RxBindingFragment {
         // Required empty public constructor
     }
 
-    public static NormalWayFragment getInstance(SuperShape superShape) {
+    public static NormalWayFragment getInstance(Context context) {
         NormalWayFragment fragment = new NormalWayFragment();
-        fragment.superShape = superShape;
+        fragment.superShape = getShape(context);
         return fragment;
     }
 

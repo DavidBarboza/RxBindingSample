@@ -1,6 +1,8 @@
 package nstv.rxbinding.listenersFragment;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -10,25 +12,45 @@ import android.support.v4.util.ArrayMap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.jakewharton.rxbinding2.view.RxView;
 import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+import com.jakewharton.rxbinding2.widget.RxProgressBar;
 import com.jakewharton.rxbinding2.widget.RxRadioGroup;
 import com.jakewharton.rxbinding2.widget.RxSeekBar;
+import com.jakewharton.rxbinding2.widget.RxTextView;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import nstv.rxbinding.R;
 import nstv.rxbinding.model.SuperShape;
 
 public class RxBindingFragment extends Fragment {
+    protected static final String SHARED_PREFS = "sharedPReferences";
+    protected static final String SUPER_SHAPE_KEY = "superShapeKey";
 
     protected SuperShape superShape;
 
     //UI ELEMENTS
+    EditText nameEditText;
     ImageView shapeImageView;
+    ProgressBar progressBar;
     //RGB Background
     TextView redTextView;
     TextView greenTextView;
@@ -39,9 +61,12 @@ public class RxBindingFragment extends Fragment {
     //Shape selection
     RadioGroup shapeRadioGroup;
     //WithLogo
+    TextView iconText;
     ImageView iconImageView;
     CheckBox withLogoCheck;
     RadioGroup iconRadioGroup;
+    //SaveShape
+    Button saveBtn;
 
     ArrayMap<Integer, Integer> iconBtnToResource;
 
@@ -57,12 +82,11 @@ public class RxBindingFragment extends Fragment {
         iconBtnToResource.put(R.id.radioBtn_cloud, R.drawable.ic_cloud);
         iconBtnToResource.put(R.id.radioBtn_heart, R.drawable.ic_heart);
         iconBtnToResource.put(R.id.radioBtn_star, R.drawable.ic_star);
-
     }
 
-    public static RxBindingFragment getInstance(SuperShape superShape) {
+    public static RxBindingFragment getInstance(Context context) {
         RxBindingFragment fragment = new RxBindingFragment();
-        fragment.superShape = superShape;
+        fragment.superShape = getShape(context);
         return fragment;
     }
 
@@ -88,7 +112,10 @@ public class RxBindingFragment extends Fragment {
     }
 
     protected void initUIElements() {
+        nameEditText = (EditText) getView().findViewById(R.id.editText_name);
+        nameEditText.setText(superShape.getName());
         shapeImageView = (ImageView) getView().findViewById(R.id.imageView_shape);
+        progressBar = (ProgressBar) getView().findViewById(R.id.progressBar);
         //RGB Background
         redTextView = (TextView) getView().findViewById(R.id.text_red);
         redTextView.setText(superShape.getRed() + "");
@@ -107,17 +134,25 @@ public class RxBindingFragment extends Fragment {
         shapeRadioGroup.check(superShape.getShape() == R.drawable.shape_square ? R.id.radioBtn_square : R.id.radioBtn_circle);
         shapeImageView.setImageResource(superShape.getShape());
         //WithLogo
+        iconText = (TextView) getView().findViewById(R.id.text_icon);
         iconImageView = (ImageView) getView().findViewById(R.id.imageView_icon);
         withLogoCheck = (CheckBox) getView().findViewById(R.id.check_withIcon);
         withLogoCheck.setChecked(superShape.getWithIcon());
         iconRadioGroup = (RadioGroup) getView().findViewById(R.id.radioGrp_icon);
         iconRadioGroup.check(getBtnIdForIcon(superShape.getIconDrawable()));
         showHideIcon();
+        //SaveShape
+        saveBtn = (Button) getView().findViewById(R.id.btn_save);
 
         updateBackgroundColor();
     }
 
     protected void setUpListeners() {
+        //Shape name
+        RxTextView.textChanges(nameEditText)
+                .map(name -> name.toString())
+                .subscribe(name -> superShape.setName(name));
+
         //RGB Background
         RxSeekBar.changes(redSeekBar)
                 .filter(progress -> progress != superShape.getRed())
@@ -163,13 +198,36 @@ public class RxBindingFragment extends Fragment {
                     showHideIcon();
                 });
 
-
-        RxRadioGroup.checkedChanges(iconRadioGroup)
+        Observable<Integer> iconObservable = RxRadioGroup.checkedChanges(iconRadioGroup)
                 .map(btnId -> iconBtnToResource.get(btnId))
+                .share();
+
+
+        Disposable changeIconDisposabe = iconObservable
                 .subscribe(iconRes -> {
                     superShape.setIconDrawable(iconRes);
                     updateIcon();
                 });
+
+        Disposable updateIconText = iconObservable
+                .map(resourceId -> getActivity().getResources().getResourceName(resourceId))
+                .map(resourceName -> "Icon " + resourceName)
+                .subscribe(label -> iconText.setText(label));
+
+
+        //Save shape
+        RxView.clicks(saveBtn)
+                .flatMap(Void -> {
+                    showProgressBar(true);
+                    return Observable.just(saveShape());
+                })
+                .delay(3, TimeUnit.SECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(Boolean -> {
+                    showProgressBar(false);
+                    Toast.makeText(getActivity(), "Shape saved", Toast.LENGTH_SHORT).show();
+                });
+
     }
 
     //UI operations
@@ -226,6 +284,34 @@ public class RxBindingFragment extends Fragment {
         }
 
         return Color.HSVToColor(Color.alpha(newColor), hsvColor);
+    }
 
+    //Save shape
+    public boolean saveShape() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(SHARED_PREFS, 0);
+        sharedPreferences.edit().putString(SUPER_SHAPE_KEY,
+                new Gson().toJson(superShape,
+                        new TypeToken<SuperShape>() {
+                        }.getType())).apply();
+        return true;
+    }
+
+    public static SuperShape getShape(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFS, 0);
+        String shapeString = sharedPreferences.getString(SUPER_SHAPE_KEY, null);
+        if (shapeString == null) {
+            return new SuperShape();
+        }
+        return new Gson().fromJson(shapeString,
+                new TypeToken<SuperShape>() {
+                }.getType());
+    }
+
+    public void showProgressBar(boolean showProgressBar) {
+        if (showProgressBar) {
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 }
