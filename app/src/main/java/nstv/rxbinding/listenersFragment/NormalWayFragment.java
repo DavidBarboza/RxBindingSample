@@ -1,62 +1,111 @@
 package nstv.rxbinding.listenersFragment;
 
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 
 import nstv.rxbinding.R;
+import nstv.rxbinding.model.SuperShape;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class NormalWayFragment extends Fragment {
-
-    //UI Elements
-    private Button button;
-    private EditText editText;
-    private AutoCompleteTextView autoCompleteTextView;
-    private RecyclerView recyclerView;
-
+public class NormalWayFragment extends RxBindingFragment {
 
     public NormalWayFragment() {
         // Required empty public constructor
     }
 
-    public static NormalWayFragment getInstance(){
-        return new NormalWayFragment();
+    public static NormalWayFragment getInstance(SuperShape superShape) {
+        NormalWayFragment fragment = new NormalWayFragment();
+        fragment.superShape = superShape;
+        return fragment;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_listeners_view, container, false);
-    }
+    protected void setUpListeners() {
+        //RGB Background
+        redSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress != superShape.getRed()) {
+                    superShape.setRed(progress);
+                    redTextView.setText(superShape.getRed() + "");
+                    updateBackgroundColor();
+                }
+            }
 
-    @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init();
-    }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {
 
-    private void init(){
-        //button = getView().findViewById()
-        setViewListeners();
-    }
+            }
 
-    private void setViewListeners() {
-        //Button Listener
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
 
-        //EditText Listener
+        greenSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress != superShape.getGreen()) {
+                    superShape.setGreen(progress);
+                    greenTextView.setText(superShape.getGreen() + "");
+                    updateBackgroundColor();
+                }
+            }
 
-        //AutoComplete Listener
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        blueSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                progress = progress * 255 / 100;
+                if (progress != superShape.getBlue()) {
+                    superShape.setBlue(progress);
+                    blueTextView.setText(superShape.getBlue() + "");
+                    updateBackgroundColor();
+                }
+            }
+
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        //Shape selection
+        shapeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.radioBtn_square) {
+                    superShape.setShape(R.drawable.shape_square);
+                } else {// Circle
+                    superShape.setShape(R.drawable.shape_circle);
+                }
+                shapeImageView.setImageResource(superShape.getShape());
+                updateBackgroundColor();
+            }
+        });
+
+        //Icon selection
+        withLogoCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                superShape.setWithIcon(isChecked);
+                showHideIcon();
+            }
+        });
+
+        iconRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int iconRes = iconBtnToResource.get(checkedId);
+                superShape.setIconDrawable(iconRes);
+                updateIcon();
+            }
+        });
     }
 }
